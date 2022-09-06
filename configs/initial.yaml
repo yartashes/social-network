@@ -1,0 +1,11 @@
+transports:
+  http:
+    port: 3456
+
+logger:
+  levels:
+    any: debug
+  prettry: true
+  sentry:
+    dsn:
+

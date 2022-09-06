@@ -1,0 +1,54 @@
+{
+  "name": "social-network",
+  "version": "0.0.1",
+  "description": "",
+  "main": "cmd/app.js",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "build": "rm -rf dest && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yartashes/social-network.git"
+  },
+  "author": "Artashes Yengibaryan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yartashes/social-network/issues"
+  },
+  "homepage": "https://github.com/yartashes/social-network#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/convict": "^6.1.1",
+    "@types/express": "^4.17.13",
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "^16.11.0",
+    "@types/pino": "6.3.11",
+    "@types/pino-multi-stream": "5.1.1",
+    "@types/pino-pretty": "4.7.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "8.22.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "ts-node": "10.0.0",
+    "typescript": "4.2.2"
+  },
+  "dependencies": {
+    "convict": "^6.2.3",
+    "dateformat": "4.6.3",
+    "express": "^4.18.1",
+    "js-yaml": "^4.1.0",
+    "pino": "6.11.3",
+    "pino-multi-stream": "5.3.0",
+    "pino-pretty": "5.0.2",
+    "pino-sentry": "0.7.0",
+    "prettier": "^2.7.1",
+    "stream": "0.0.2"
+  }
+}
