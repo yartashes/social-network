@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Social Network",
+    "description": "Social Network",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http"
+    }
+  ],
+  "components": {
+    "parameters": {},
+    "responses": {
+      "error": {
+        "description": "Error response with some status, e.g. Bad Request, Forbidden etc.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Error description"
+                }
+              }
+            }
+          }
+        }
+      },
+      "signup": {
+        "description": "Signup response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Auth sign up",
+        "operationId": "postAuthSignup",
+        "description": "Register new user",
+        "requestBody": {
+          "description": "Signup body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/signup"
+          }
+        },
+        "security": []
+      }
+    }
+  }
+}

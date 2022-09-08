@@ -1,0 +1,35 @@
+version: '3.8'
+networks:
+  social-network:
+    name: social-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.0.0/16
+          ip_range: 10.10.0.0/24
+          gateway: 10.10.0.1
+          aux_addresses:
+            kafka: 10.10.0.2
+            zookeeper: 10.10.0.3
+            redis: 10.10.0.4
+            postgres: 10.10.0.5
+            elasticsearch: 10.10.0.6
+            kibana: 10.10.0.7
+            clickhouse: 10.10.0.8
+services:
+  postgres:
+    container_name: sn-postgres
+    image: postgres:12-alpine
+    mem_limit: 1024m
+    restart: always
+    networks:
+      - social-network
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_DB=social_networks
+    ports:
+      - 15432:5432
+    volumes:
+      - ./tmp/postgres_data:/var/lib/postgresql/data

@@ -8,6 +8,9 @@ import { configSchema } from '../../configs/constants';
 import { Config } from '../../configs/interfaces';
 
 import { Logger } from '../libraries/logger';
+import { Transport } from '../transports/interfaces';
+import { Transports } from '../transports';
+import { Repositories } from '../repositories';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -17,6 +20,10 @@ export class AppServer {
   private readonly log: PinoLogger;
 
   private config?: Config;
+
+  private transports?: Transport;
+
+  private repositories?: Repositories;
 
   constructor(rootPath: string) {
     this.rootPath = path.resolve(rootPath);
@@ -32,6 +39,21 @@ export class AppServer {
     }
 
     return this.config;
+  }
+
+  public async stop(): Promise<void> {
+    await this.repositories?.stop();
+    await this.transports?.stop();
+  }
+
+  public async start(): Promise<void> {
+    await this.repositories?.start();
+    await this.transports?.start();
+  }
+
+  public async init(): Promise<void> {
+    this.transports = new Transports(this.getConfig().transports, this.logger);
+    this.repositories = new Repositories(this.getConfig().resources, this.logger);
   }
 
   private loadConfig(): void {

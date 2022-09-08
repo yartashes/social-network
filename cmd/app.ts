@@ -10,15 +10,17 @@ async function main() {
   process.once('SIGTERM', async () => {
     console.log('SIGTERM received');
 
-    // return server.stop();
+    return server.stop();
   });
   process.once('SIGINT', async () => {
     console.log('SIGINT received');
 
-    // return server.stop();
+    return server.stop();
   });
 
-  // return server.run(rootPath);
+  await server.init();
+
+  return server.start();
 }
 
 main()

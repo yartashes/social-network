@@ -106,3 +106,4 @@ dist
 .idea
 dest
 configs/config.yaml
+tmp
