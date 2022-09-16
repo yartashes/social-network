@@ -2,23 +2,21 @@ import path from 'path';
 
 import { Pool, PoolClient } from 'pg';
 import migration from 'node-pg-migrate';
-import { Logger as PinoLogger } from 'pino';
 
-import { ResourcePostgresConfig } from '../../../../configs/interfaces';
+import { ResourcePostgresConfig } from '../../../configs/interfaces';
 
-import { Logger } from '../../../libraries/logger';
+import { Logger } from '../../libraries/logger';
 
-import { Resource } from '../interfaces';
+import { Resource, ResourceType } from '../interfaces';
+import { BaseResource } from '../base';
 
-export class Postgresql implements Resource {
-  private readonly log: PinoLogger;
-
+export class PostgresResource extends BaseResource implements Resource {
   private readonly pool: Pool;
 
   private client?: PoolClient;
 
   constructor(config: ResourcePostgresConfig, logger: Logger) {
-    this.log = logger.getLogger('postgres-client');
+    super(logger);
 
     this.log.info('create postgres pool');
     this.pool = new Pool({
@@ -28,6 +26,18 @@ export class Postgresql implements Resource {
       user: config.user,
       password: config.password,
     });
+  }
+
+  public get type(): ResourceType {
+    return ResourceType.postgres;
+  }
+
+  public getClient(): PoolClient {
+    if (!this.client) {
+      throw new Error('Postgres Sql client not initialized');
+    }
+
+    return this.client;
   }
 
   public async start(): Promise<void> {

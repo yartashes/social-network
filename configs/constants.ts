@@ -54,5 +54,36 @@ export const configSchema: Schema<Config> = {
         nullable: false,
       },
     },
+    mailjet: {
+      public: {
+        default: '',
+        format: String,
+        nullable: false,
+        env: 'MAILJET_KEY',
+      },
+      private: {
+        default: '',
+        format: String,
+        nullable: false,
+        env: 'MAILJET_SECRET',
+      },
+    },
+    redis: {
+      host: {
+        default: '127.0.0.1',
+        format: String,
+        env: 'REDIS_HOST',
+      },
+      port: {
+        default: 6379,
+        format: 'port',
+        env: 'REDIS_PORT',
+      },
+      db: {
+        default: 0,
+        format: Number,
+        env: 'REDIS_DB',
+      },
+    },
   },
 };

@@ -8,6 +8,7 @@ import { TransportsHttpConfig } from '../../../configs/interfaces';
 import { Logger } from '../../libraries/logger';
 import { Transport } from '../interfaces';
 import { Routes } from './routers';
+import { Services } from '../../services';
 
 export class HttpServer implements Transport {
   private readonly log: PinoLogger;
@@ -18,18 +19,26 @@ export class HttpServer implements Transport {
 
   private readonly express: Express;
 
+  private readonly services: Services;
+
   private server?: Server;
 
-  constructor(config: TransportsHttpConfig, logger: Logger) {
+  constructor(
+    services: Services,
+    config: TransportsHttpConfig,
+    logger: Logger,
+  ) {
     this.config = config;
     this.logger = logger;
+    this.services = services;
+
     this.log = logger.getLogger('http-server');
     this.express = express();
   }
 
   public async start(): Promise<void> {
     this.log.info('starting http server');
-    new Routes(this.express, this.logger).init();
+    new Routes(this.services, this.express, this.logger).init();
 
     this.server = this.express.listen(
       this.config.port,

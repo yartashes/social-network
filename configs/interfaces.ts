@@ -23,8 +23,21 @@ export interface ResourcePostgresConfig {
   password: string;
 }
 
+export interface ResourceRedisConfig {
+  host: string;
+  port: number;
+  db: number;
+}
+
+export interface ResourceMailjetConfig {
+  public: string;
+  private: string;
+}
+
 export interface ResourcesConfig {
   postgres: ResourcePostgresConfig;
+  mailjet: ResourceMailjetConfig;
+  redis: ResourceRedisConfig;
 }
 
 export interface Config {

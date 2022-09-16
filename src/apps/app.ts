@@ -11,6 +11,9 @@ import { Logger } from '../libraries/logger';
 import { Transport } from '../transports/interfaces';
 import { Transports } from '../transports';
 import { Repositories } from '../repositories';
+import { Resources } from '../resources';
+import { Params } from '../services/interfaces';
+import { Services } from '../services';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -23,7 +26,7 @@ export class AppServer {
 
   private transports?: Transport;
 
-  private repositories?: Repositories;
+  private resources?: Resources;
 
   constructor(rootPath: string) {
     this.rootPath = path.resolve(rootPath);
@@ -42,18 +45,33 @@ export class AppServer {
   }
 
   public async stop(): Promise<void> {
-    await this.repositories?.stop();
+    await this.resources?.stop();
     await this.transports?.stop();
   }
 
   public async start(): Promise<void> {
-    await this.repositories?.start();
+    await this.resources?.start();
     await this.transports?.start();
   }
 
   public async init(): Promise<void> {
-    this.transports = new Transports(this.getConfig().transports, this.logger);
-    this.repositories = new Repositories(this.getConfig().resources, this.logger);
+    this.resources = new Resources(this.getConfig().resources, this.logger);
+
+    const repositories = new Repositories(this.resources, this.logger);
+
+    const params: Params = {
+      repositories,
+      logger: this.logger,
+      resources: this.resources,
+    };
+
+    const services = new Services(params);
+
+    this.transports = new Transports(
+      services,
+      this.getConfig().transports,
+      this.logger,
+    );
   }
 
   private loadConfig(): void {

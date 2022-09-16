@@ -5,6 +5,7 @@ import {
   Response as ExpressResponse,
   NextFunction,
 } from 'express';
+import { json } from 'body-parser';
 
 import { Logger } from '../../../libraries/logger';
 
@@ -16,6 +17,9 @@ import {
 
 import { HttpRouter } from './interfaces';
 import { SwaggerRouter } from './swagger';
+import { Services } from '../../../services';
+import { AuthRouter } from './auth';
+import { ErrorMiddleware } from '../middlewares/error';
 
 export class Routes {
   private readonly log: PinoLogger;
@@ -32,18 +36,26 @@ export class Routes {
 
   private readonly errorMiddlewares: Array<ErrorMiddlewareHandler>;
 
-  constructor(express: Express, logger: Logger) {
+  constructor(
+    services: Services,
+    express: Express,
+    logger: Logger,
+  ) {
     this.express = express;
     this.logger = logger;
     this.log = logger.getLogger('http-routes');
 
     this.preMiddlewares = [];
-    this.endpoints = this.initEndpoints();
+    this.endpoints = this.initEndpoints(services);
     this.postMiddlewares = [];
-    this.errorMiddlewares = [];
+    this.errorMiddlewares = [
+      new ErrorMiddleware(logger),
+    ];
   }
 
   public init(): void {
+    this.express.use(json());
+
     this.preMiddlewares
       .forEach((item) => {
         this.express.use((
@@ -91,9 +103,10 @@ export class Routes {
       });
   }
 
-  private initEndpoints(): Array<HttpRouter> {
+  private initEndpoints(services: Services): Array<HttpRouter> {
     return [
       new SwaggerRouter(this.logger),
+      new AuthRouter(services, this.logger),
     ];
   }
 }

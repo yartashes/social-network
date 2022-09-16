@@ -9,3 +9,19 @@ logger:
   sentry:
     dsn:
 
+resources:
+  postgres:
+    host: 127.0.0.1
+    port: 15432
+    db: social_networks
+    user: user
+    password: user
+
+  mailjet:
+    public:
+    private:
+
+  redis:
+    host: 127.0.0.1
+    port: 16379
+    db: 0

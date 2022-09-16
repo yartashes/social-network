@@ -1,14 +1,21 @@
-import { Transport } from './interfaces';
 import { TransportsConfig } from '../../configs/interfaces';
+
 import { Logger } from '../libraries/logger';
+import { Services } from '../services';
+
+import { Transport } from './interfaces';
 import { HttpServer } from './http';
 
 export class Transports {
   private readonly transports: Array<Transport>;
 
-  constructor(config: TransportsConfig, logger: Logger) {
+  constructor(
+    services: Services,
+    config: TransportsConfig,
+    logger: Logger,
+  ) {
     this.transports = [
-      new HttpServer(config.http, logger),
+      new HttpServer(services, config.http, logger),
     ];
   }
 

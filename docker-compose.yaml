@@ -33,3 +33,15 @@ services:
       - 15432:5432
     volumes:
       - ./tmp/postgres_data:/var/lib/postgresql/data
+  redis:
+    container_name: sn-redis
+    image: redis:6.2-alpine
+    mem_limit: 256m
+    networks:
+      - social-network
+    restart: always
+    ports:
+      - 16379:6379
+    command: redis-server
+    volumes:
+      - /tmp/redis_data:/data
