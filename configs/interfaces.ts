@@ -40,7 +40,23 @@ export interface ResourcesConfig {
   redis: ResourceRedisConfig;
 }
 
+export interface AppJwtExpireConfig {
+  access: string;
+  refresh: string;
+}
+
+export interface AppJwtConfig {
+  secret: string;
+  expire: AppJwtExpireConfig;
+  algorithm: string;
+}
+
+export interface AppConfig {
+  jwt: AppJwtConfig;
+}
+
 export interface Config {
+  app: AppConfig;
   transports: TransportsConfig;
   logger: LoggerConfig;
   resources: ResourcesConfig;

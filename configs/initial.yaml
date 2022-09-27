@@ -1,3 +1,12 @@
+app:
+  jwt:
+    secret:
+    algorithm: HS512
+    expire:
+      access: 10m
+      refresh: 10d
+
+
 transports:
   http:
     port: 3456

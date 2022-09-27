@@ -44,6 +44,29 @@
             }
           }
         }
+      },
+      "signupVerify": {
+        "description": "Signup response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "access": {
+                      "type": "string"
+                    },
+                    "refresh": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -80,6 +103,40 @@
           },
           "200": {
             "$ref": "#/components/responses/signup"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/auth/signup/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Auth sign up verify",
+        "operationId": "postAuthSignupVerify",
+        "description": "Verify user registration",
+        "requestBody": {
+          "description": "Signup body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/signupVerify"
           }
         },
         "security": []

@@ -14,6 +14,7 @@ import { Repositories } from '../repositories';
 import { Resources } from '../resources';
 import { Params } from '../services/interfaces';
 import { Services } from '../services';
+import { Jwt } from '../libraries/jwt';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -63,6 +64,7 @@ export class AppServer {
       repositories,
       logger: this.logger,
       resources: this.resources,
+      jwt: new Jwt(this.getConfig().app.jwt),
     };
 
     const services = new Services(params);

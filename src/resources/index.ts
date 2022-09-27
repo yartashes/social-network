@@ -9,6 +9,7 @@ import { BaseResource } from './base';
 import { PostgresResource } from './postgresql';
 import { MailjetResource } from './mail/mailjet';
 import { Mail } from './mail/interfaces';
+import { RedisResource } from './redis';
 
 export class Resources {
   private readonly log: PinoLogger;
@@ -34,6 +35,10 @@ export class Resources {
     return this.resources[ResourceType.postgres] as PostgresResource;
   }
 
+  public get redis(): RedisResource {
+    return this.resources[ResourceType.redis] as RedisResource;
+  }
+
   public get mail(): Mail {
     return (this.resources[ResourceType.mail] as MailjetResource) as Mail;
   }
@@ -56,6 +61,7 @@ export class Resources {
     return [
       new PostgresResource(this.config.postgres, this.logger),
       new MailjetResource(this.config.mailjet, this.logger),
+      new RedisResource(this.config.redis, this.logger),
     ];
   }
 }

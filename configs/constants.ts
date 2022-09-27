@@ -2,6 +2,33 @@ import { Schema } from 'convict';
 import { Config } from './interfaces';
 
 export const configSchema: Schema<Config> = {
+  app: {
+    jwt: {
+      secret: {
+        default: '',
+        format: String,
+        nullable: false,
+        env: 'JWT_SECRET',
+      },
+      algorithm: {
+        default: 'HS512',
+        format: String,
+        env: 'JWT_ALGORITHM',
+      },
+      expire: {
+        access: {
+          default: '10m',
+          format: String,
+          env: 'JWT_EXPIRE_ACCESS',
+        },
+        refresh: {
+          default: '10d',
+          format: String,
+          env: 'JWT_EXPIRE_REFRESH',
+        },
+      },
+    },
+  },
   transports: {
     http: {
       port: {
