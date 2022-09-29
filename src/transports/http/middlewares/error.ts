@@ -9,6 +9,7 @@ import { Request } from '../interfaces';
 
 import { ErrorMiddlewareHandler } from './interface';
 import { ErrorResponse } from '../routers/interfaces';
+import { ClientError } from '../../../libraries/errors/client';
 
 export class ErrorMiddleware implements ErrorMiddlewareHandler {
   private readonly logger: PinoLogger;
@@ -31,6 +32,12 @@ export class ErrorMiddleware implements ErrorMiddlewareHandler {
       response = {
         error: err.message,
         details: err.details.map((item) => item.message),
+      };
+    } else if (err instanceof ClientError) {
+      res.statusCode = err.getCode();
+      response = {
+        error: 'client side error',
+        details: [err.message],
       };
     } else {
       res.statusCode = 500;

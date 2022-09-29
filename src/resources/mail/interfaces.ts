@@ -1,5 +1,6 @@
 export interface Mail {
   signup(email: string, code: number): Promise<unknown>;
+  signIn(email: string, code: number): Promise<unknown>;
 }
 
 export interface SenderInfo {

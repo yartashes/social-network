@@ -56,6 +56,28 @@ export class MailjetResource
     return result;
   }
 
+  public async signIn(email: string, code: number): Promise<unknown> {
+    const result = await this.client
+      .post('send', { version: 'v3.1' })
+      .request({
+        Messages: [
+          {
+            From: this.from,
+            To: [
+              {
+                Email: email,
+              },
+            ],
+            Subject: 'Sign in verification',
+            TextPart: `Sign in verification code: ${code}`,
+            HTMLPart: `<h3>Sign in verification code</h3><br /><h1>${code}</h1>`,
+          },
+        ],
+      });
+
+    return result;
+  }
+
   public async start(): Promise<void> {}
 
   public async stop(): Promise<void> {}

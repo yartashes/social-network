@@ -59,18 +59,20 @@ export class AppServer {
     this.resources = new Resources(this.getConfig().resources, this.logger);
 
     const repositories = new Repositories(this.resources, this.logger);
+    const jwt = new Jwt(this.getConfig().app.jwt);
 
     const params: Params = {
       repositories,
+      jwt,
       logger: this.logger,
       resources: this.resources,
-      jwt: new Jwt(this.getConfig().app.jwt),
     };
 
     const services = new Services(params);
 
     this.transports = new Transports(
       services,
+      jwt,
       this.getConfig().transports,
       this.logger,
     );

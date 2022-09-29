@@ -20,6 +20,9 @@ import { SwaggerRouter } from './swagger';
 import { Services } from '../../../services';
 import { AuthRouter } from './auth';
 import { ErrorMiddleware } from '../middlewares/error';
+import { PostRouter } from './posts';
+import { AuthenticationMiddleware } from '../middlewares/authentication';
+import { Jwt } from '../../../libraries/jwt';
 
 export class Routes {
   private readonly log: PinoLogger;
@@ -39,13 +42,16 @@ export class Routes {
   constructor(
     services: Services,
     express: Express,
+    jwt: Jwt,
     logger: Logger,
   ) {
     this.express = express;
     this.logger = logger;
     this.log = logger.getLogger('http-routes');
 
-    this.preMiddlewares = [];
+    this.preMiddlewares = [
+      new AuthenticationMiddleware(services.users, jwt, logger),
+    ];
     this.endpoints = this.initEndpoints(services);
     this.postMiddlewares = [];
     this.errorMiddlewares = [
@@ -107,6 +113,7 @@ export class Routes {
     return [
       new SwaggerRouter(this.logger),
       new AuthRouter(services, this.logger),
+      new PostRouter(services, this.logger),
     ];
   }
 }

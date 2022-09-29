@@ -2,9 +2,9 @@ export interface User {
   id: bigint;
   email: string;
   username: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at?: Date;
 }
 
 export interface CreateParams {

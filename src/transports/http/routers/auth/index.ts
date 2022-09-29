@@ -4,7 +4,6 @@ import {
   Response as ExpressResponse,
   Router,
 } from 'express';
-import Joi from 'joi';
 
 import { Logger } from '../../../../libraries/logger';
 
@@ -13,9 +12,26 @@ import { Services } from '../../../../services';
 import { Request } from '../../interfaces';
 
 import { HttpRouter } from '../interfaces';
-import { SignupParams, SignupVerifyParams } from '../../../../services/auth/interfaces';
-import { SignupResponse, SignupVerifyResponse } from './interfaces';
-import { signupRequest, signupVerifyRequest } from './constants';
+import {
+  ExchangeParams,
+  SignInParams, SignInVerifyParams,
+  SignupParams,
+  SignupVerifyParams,
+} from '../../../../services/auth/interfaces';
+import {
+  ExchangeResponse,
+  SignInResponse,
+  SignInVerifyResponse,
+  SignupResponse,
+  SignupVerifyResponse,
+} from './interfaces';
+import {
+  exchangeRequest,
+  signInRequest,
+  signInVerifyRequest,
+  signupRequest,
+  signupVerifyRequest,
+} from './constants';
 
 export class AuthRouter implements HttpRouter {
   private readonly log: PinoLogger;
@@ -51,6 +67,30 @@ export class AuthRouter implements HttpRouter {
           const newReq = req as Request;
 
           return this.signupVerify(newReq, res, next);
+        },
+      )
+      .post(
+        '/signin',
+        async (req, res, next) => {
+          const newReq = req as Request;
+
+          return this.signIn(newReq, res, next);
+        },
+      )
+      .post(
+        '/signin/verify',
+        async (req, res, next) => {
+          const newReq = req as Request;
+
+          return this.signInVerify(newReq, res, next);
+        },
+      )
+      .post(
+        '/exchange',
+        async (req, res, next) => {
+          const newReq = req as Request;
+
+          return this.exchange(newReq, res, next);
         },
       );
 
@@ -117,6 +157,111 @@ export class AuthRouter implements HttpRouter {
 
       const response: SignupResponse = {
         result,
+      };
+
+      return res.json(response);
+    } catch (e) {
+      next(e);
+    }
+
+    return undefined;
+  }
+
+  private async signIn(
+    req: Request,
+    res: ExpressResponse,
+    next: NextFunction,
+  ): Promise<unknown> {
+    try {
+      const params: SignInParams = {
+        email: req.body.email,
+      };
+
+      const validation = signInRequest.validate(params);
+
+      if (validation.error) {
+        return next(validation.error);
+      }
+
+      const result = await this
+        .services
+        .auth
+        .signIn(params);
+
+      const response: SignInResponse = {
+        result,
+      };
+
+      return res.json(response);
+    } catch (e) {
+      next(e);
+    }
+
+    return undefined;
+  }
+
+  private async signInVerify(
+    req: Request,
+    res: ExpressResponse,
+    next: NextFunction,
+  ): Promise<unknown> {
+    try {
+      const params: SignInVerifyParams = {
+        code: req.body.code,
+      };
+
+      const validation = signInVerifyRequest.validate(params);
+
+      if (validation.error) {
+        return next(validation.error);
+      }
+
+      const result = await this
+        .services
+        .auth
+        .signInVerify(params);
+
+      const response: SignInVerifyResponse = {
+        result: {
+          access: result.access,
+          refresh: result.refresh,
+        },
+      };
+
+      return res.json(response);
+    } catch (e) {
+      next(e);
+    }
+
+    return undefined;
+  }
+
+  private async exchange(
+    req: Request,
+    res: ExpressResponse,
+    next: NextFunction,
+  ): Promise<unknown> {
+    try {
+      const params: ExchangeParams = {
+        token: req.body.token,
+      };
+
+      const validation = exchangeRequest.validate(params);
+
+      if (validation.error) {
+        return next(validation.error);
+      }
+
+      const result = await this
+        .services
+        .auth
+        .exchange(params);
+
+      const response: ExchangeResponse = {
+        result: {
+          access: result.access,
+          refresh: result.refresh,
+        },
       };
 
       return res.json(response);

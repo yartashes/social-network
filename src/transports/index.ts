@@ -5,17 +5,19 @@ import { Services } from '../services';
 
 import { Transport } from './interfaces';
 import { HttpServer } from './http';
+import { Jwt } from '../libraries/jwt';
 
 export class Transports {
   private readonly transports: Array<Transport>;
 
   constructor(
     services: Services,
+    jwt: Jwt,
     config: TransportsConfig,
     logger: Logger,
   ) {
     this.transports = [
-      new HttpServer(services, config.http, logger),
+      new HttpServer(services, jwt, config.http, logger),
     ];
   }
 

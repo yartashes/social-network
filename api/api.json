@@ -11,6 +11,13 @@
     }
   ],
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "parameters": {},
     "responses": {
       "error": {
@@ -62,6 +69,84 @@
                       "type": "string"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      },
+      "signIn": {
+        "description": "SignIn response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "signInVerify": {
+        "description": "SignIn response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "access": {
+                      "type": "string"
+                    },
+                    "refresh": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "exchange": {
+        "description": "Exchange response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "access": {
+                      "type": "string"
+                    },
+                    "refresh": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Post response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {}
                 }
               }
             }
@@ -140,6 +225,142 @@
           }
         },
         "security": []
+      }
+    },
+    "/api/auth/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Auth sign in",
+        "operationId": "postAuthSignIn",
+        "description": "Login",
+        "requestBody": {
+          "description": "SignIn body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/signIn"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/auth/signin/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Auth sign in verify",
+        "operationId": "postAuthSignInVerify",
+        "description": "Verify user registration",
+        "requestBody": {
+          "description": "SignIn body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/signInVerify"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/auth/exchange": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Auth exchange user access token",
+        "operationId": "postAuthExchange",
+        "description": "Auth exchange user access token",
+        "requestBody": {
+          "description": "Exchange body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/signInVerify"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/posts": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "summary": "Create new post",
+        "operationId": "postPost",
+        "description": "Create new post",
+        "requestBody": {
+          "description": "Post body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/post"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   }
