@@ -6,6 +6,7 @@ import {
   NextFunction,
 } from 'express';
 import { json } from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 import { Logger } from '../../../libraries/logger';
 
@@ -23,6 +24,7 @@ import { ErrorMiddleware } from '../middlewares/error';
 import { PostRouter } from './posts';
 import { AuthenticationMiddleware } from '../middlewares/authentication';
 import { Jwt } from '../../../libraries/jwt';
+import { MediaRouter } from './media';
 
 export class Routes {
   private readonly log: PinoLogger;
@@ -60,6 +62,13 @@ export class Routes {
   }
 
   public init(): void {
+    this.express.use(fileUpload({
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
+      useTempFiles: true,
+      tempFileDir: './tmp/upload/',
+    }));
     this.express.use(json());
 
     this.preMiddlewares
@@ -114,6 +123,7 @@ export class Routes {
       new SwaggerRouter(this.logger),
       new AuthRouter(services, this.logger),
       new PostRouter(services, this.logger),
+      new MediaRouter(services, this.logger),
     ];
   }
 }

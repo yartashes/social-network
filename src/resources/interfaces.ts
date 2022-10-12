@@ -7,4 +7,6 @@ export enum ResourceType {
   postgres = 0,
   mail = 1,
   redis = 2,
+  mongo = 3,
+  s3 = 4,
 }

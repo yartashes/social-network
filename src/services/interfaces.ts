@@ -1,7 +1,11 @@
 import { Logger } from '../libraries/logger';
-import { Repositories } from '../repositories';
-import { Resources } from '../resources';
 import { Jwt } from '../libraries/jwt';
+
+import { Repositories } from '../repositories';
+
+import { Resources } from '../resources';
+
+import { User } from '../domains/user';
 
 import {
   ExchangeParams, ExchangeResult,
@@ -12,7 +16,7 @@ import {
   SignupVerifyParams,
   SignupVerifyResult,
 } from './auth/interfaces';
-import { User } from '../domains/user';
+import { UploadParams } from './media/interfaces';
 
 export interface Params {
   logger: Logger;
@@ -33,7 +37,12 @@ export interface Users {
   getByIdWithDeleted(id: bigint): Promise<User>;
 }
 
+export interface Media {
+  upload(params: UploadParams): Promise<string>;
+}
+
 export interface ServicesType {
   auth: Auth;
   users: Users;
+  media: Media;
 }

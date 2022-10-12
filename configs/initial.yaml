@@ -30,7 +30,24 @@ resources:
     public:
     private:
 
+  s3:
+    host:
+    accessKeyId:
+    secretAccessKey:
+    bucket:
+
   redis:
     host: 127.0.0.1
     port: 16379
     db: 0
+
+  mongo:
+    hosts:
+      - 127.0.0.1:17017
+      - 127.0.0.1:17018
+    rs:
+      name: sn
+    db: posts
+    auth:
+      user: sn
+      password: password

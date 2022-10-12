@@ -15,6 +15,29 @@ export interface LoggerConfig {
   };
 }
 
+export interface MongoReplicaSetConfig {
+  name: string;
+}
+
+export interface MongoAuthConfig {
+  user: string;
+  password: string;
+}
+
+export interface ResourceMongoConfig {
+  hosts: Array<string>;
+  db: string;
+  rs: MongoReplicaSetConfig;
+  auth: MongoAuthConfig;
+}
+
+export interface ResourceS3Config {
+  host: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  bucket: string;
+}
+
 export interface ResourcePostgresConfig {
   host: string;
   port: number;
@@ -38,6 +61,8 @@ export interface ResourcesConfig {
   postgres: ResourcePostgresConfig;
   mailjet: ResourceMailjetConfig;
   redis: ResourceRedisConfig;
+  mongo: ResourceMongoConfig;
+  s3: ResourceS3Config;
 }
 
 export interface AppJwtExpireConfig {

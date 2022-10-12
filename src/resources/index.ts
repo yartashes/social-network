@@ -6,10 +6,16 @@ import { Logger } from '../libraries/logger';
 
 import { Resource, ResourceType } from './interfaces';
 import { BaseResource } from './base';
+
 import { PostgresResource } from './postgresql';
+
 import { MailjetResource } from './mail/mailjet';
 import { Mail } from './mail/interfaces';
+
 import { RedisResource } from './redis';
+
+import { S3Resource } from './storage/s3';
+import { Storage } from './storage/interfaces';
 
 export class Resources {
   private readonly log: PinoLogger;
@@ -43,6 +49,10 @@ export class Resources {
     return (this.resources[ResourceType.mail] as MailjetResource) as Mail;
   }
 
+  public get storage(): Storage {
+    return (this.resources[ResourceType.s3] as S3Resource) as Storage;
+  }
+
   public async stop(): Promise<void> {
     await Promise.all(
       Object.values(this.resources)
@@ -62,6 +72,7 @@ export class Resources {
       new PostgresResource(this.config.postgres, this.logger),
       new MailjetResource(this.config.mailjet, this.logger),
       new RedisResource(this.config.redis, this.logger),
+      new S3Resource(this.config.s3, this.logger),
     ];
   }
 }

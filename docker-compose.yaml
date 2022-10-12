@@ -10,13 +10,17 @@ networks:
           ip_range: 10.10.0.0/24
           gateway: 10.10.0.1
           aux_addresses:
-            kafka: 10.10.0.2
-            zookeeper: 10.10.0.3
+            mongo1: 10.10.0.2
+            mongo2: 10.10.0.3
             redis: 10.10.0.4
             postgres: 10.10.0.5
-            elasticsearch: 10.10.0.6
-            kibana: 10.10.0.7
-            clickhouse: 10.10.0.8
+            mongo-init: 10.10.0.6
+            minio: 10.10.0.7
+
+volumes:
+  minio-storage:
+    external: true
+
 services:
   postgres:
     container_name: sn-postgres
@@ -33,6 +37,7 @@ services:
       - 15432:5432
     volumes:
       - ./tmp/postgres_data:/var/lib/postgresql/data
+
   redis:
     container_name: sn-redis
     image: redis:6.2-alpine
@@ -44,4 +49,66 @@ services:
       - 16379:6379
     command: redis-server
     volumes:
-      - /tmp/redis_data:/data
+      - ./tmp/redis_data:/data
+
+  mongo1:
+    container_name: sn-mongo1
+    image: mongo:4.4
+    mem_limit: 1024m
+    volumes:
+      - ./tmp/mongo/1:/data/db
+    networks:
+      - social-network
+    ports:
+      - 17017:17017
+    restart: always
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "sn", "--port", "17017"]
+
+  mongo2:
+    container_name: sn-mongo2
+    image: mongo:4.4
+    mem_limit: 1024m
+    volumes:
+      - ./tmp/mongo/2:/data/db
+    networks:
+      - social-network
+    ports:
+      - 17018:17018
+    restart: always
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "sn", "--port", "17018"]
+
+  mongo-init:
+    container_name: sn-mongo-init
+    image: mongo:4.4
+    mem_limit: 256m
+    volumes:
+      - ./scripts/mongo/rs-init.sh:/scripts/rs-init.sh
+    command:
+      - /scripts/rs-init.sh
+    networks:
+      - social-network
+    depends_on:
+      - mongo1
+      - mongo2
+    links:
+      - mongo1
+      - mongo2
+
+  minio:
+    container_name: sn-minio
+    image: docker.io/bitnami/minio:2022
+    mem_limit: 512m
+    networks:
+      - social-network
+    environment:
+      - MINIO_ROOT_USER=sn-minio
+      - MINIO_ROOT_PASSWORD=sn-minio-pass
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio-storage:/data
+    restart: always
+
+
+#docker volume create --driver local --opt type=none --opt device=/home/artash/go/src/github.com/yartash/social-network/tmp/minio --opt o=bind minio-storage

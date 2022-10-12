@@ -152,6 +152,27 @@
             }
           }
         }
+      },
+      "mediaUpload": {
+        "description": "Media Upload response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "633f0ec2ce1b67e31a6f82ae"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -354,6 +375,45 @@
           },
           "200": {
             "$ref": "#/components/responses/post"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/media/upload": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Upload media file",
+        "operationId": "postMediaUpload",
+        "description": "Upload media file",
+        "requestBody": {
+          "description": "Upload body",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/error"
+          },
+          "200": {
+            "$ref": "#/components/responses/mediaUpload"
           }
         },
         "security": [

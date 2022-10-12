@@ -112,5 +112,67 @@ export const configSchema: Schema<Config> = {
         env: 'REDIS_DB',
       },
     },
+    mongo: {
+      hosts: {
+        default: [],
+        env: 'MONGO_HOSTS',
+        nullable: false,
+        format: Array,
+      },
+      db: {
+        default: 'posts',
+        env: 'MONGO_DB',
+        nullable: false,
+        format: String,
+      },
+      rs: {
+        name: {
+          default: 'sn',
+          env: 'MONGO_RS_NAME',
+          nullable: false,
+          format: String,
+        },
+      },
+      auth: {
+        user: {
+          default: '',
+          env: 'MONGO_USER',
+          nullable: false,
+          format: String,
+        },
+        password: {
+          default: '',
+          env: 'MONGO_PASS',
+          nullable: false,
+          format: String,
+        },
+      },
+    },
+    s3: {
+      host: {
+        default: '127.0.0.1:9000',
+        env: 'S#_HOST',
+        nullable: false,
+        format: String,
+      },
+      accessKeyId: {
+        default: '',
+        env: 'S3_ACCESS',
+        nullable: false,
+        format: String,
+      },
+      secretAccessKey: {
+        default: '',
+        env: 'S3_SECRET',
+        nullable: false,
+        format: String,
+      },
+      bucket: {
+        default: '',
+        env: 'S3_Bucket',
+        nullable: false,
+        format: String,
+      },
+    },
   },
 };

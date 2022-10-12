@@ -2,7 +2,7 @@
 import { Logger as PinoLogger } from 'pino';
 import { NextFunction, Response } from 'express';
 
-import { TokenExpiredError } from 'jsonwebtoken';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { Logger } from '../../../libraries/logger';
 import { ClientError } from '../../../libraries/errors/client';
 import { HttpStatusCodes } from '../../../libraries/http';
@@ -74,13 +74,23 @@ export class AuthenticationMiddleware implements MiddlewareHandler {
 
       req.user = await this.usersService.getByIdWithDeleted(payload.id);
     } catch (e) {
-      if (e instanceof TokenExpiredError) {
+      switch (true) {
+      case e instanceof TokenExpiredError:
         return next(
           new ClientError(
             'Jwt token expired',
             HttpStatusCodes.unauthorized,
           ),
         );
+      case e instanceof JsonWebTokenError:
+        return next(
+          new ClientError(
+            'Invalid jwt token',
+            HttpStatusCodes.forbidden,
+          ),
+        );
+      default:
+        break;
       }
 
       this.logger.warn(e);

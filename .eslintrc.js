@@ -1,8 +1,8 @@
 module.exports = {
-  'env': {
-    'commonjs': true,
-    'es2021': true,
-    'node': true
+  env: {
+    commonjs: true,
+    es2021: true,
+    node: true,
   },
   extends: [
     'airbnb-base',
@@ -10,7 +10,8 @@ module.exports = {
     // 'prettier',
   ],
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    createDefaultProgram: true,
   },
   plugins: [
     'prettier',
@@ -26,4 +27,4 @@ module.exports = {
     'react/jsx-filename-extension': 'off',
     '@typescript-eslint/no-empty-function': 'off',
   },
-}
+};
