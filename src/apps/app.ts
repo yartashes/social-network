@@ -15,6 +15,7 @@ import { Resources } from '../resources';
 import { Params } from '../services/interfaces';
 import { Services } from '../services';
 import { Jwt } from '../libraries/jwt';
+import { ImageTools } from '../libraries/image-tools';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -60,10 +61,12 @@ export class AppServer {
 
     const repositories = new Repositories(this.resources, this.logger);
     const jwt = new Jwt(this.getConfig().app.jwt);
+    const imageTools = new ImageTools();
 
     const params: Params = {
       repositories,
       jwt,
+      imageTools,
       logger: this.logger,
       resources: this.resources,
     };

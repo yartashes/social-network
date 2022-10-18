@@ -1,8 +1,14 @@
 import { Logger } from '../libraries/logger';
 import { Resources } from '../resources';
-import { Users, RepositoriesType, Auth } from './interfaces';
+import {
+  Users,
+  RepositoriesType,
+  Auth,
+  Images,
+} from './interfaces';
 import { PostgresUsersRepository } from './users/postgres';
 import { IoRedisAuthRepository } from './auth/redis';
+import { MongoImagesRepository } from './images/mongo';
 
 export class Repositories {
   private readonly repositories: RepositoriesType;
@@ -14,6 +20,7 @@ export class Repositories {
         logger,
       ),
       auth: new IoRedisAuthRepository(resources.redis, logger),
+      images: new MongoImagesRepository(resources.mongo, logger),
     };
   }
 
@@ -23,5 +30,9 @@ export class Repositories {
 
   public get auth(): Auth {
     return this.repositories.auth;
+  }
+
+  public get images(): Images {
+    return this.repositories.images;
   }
 }

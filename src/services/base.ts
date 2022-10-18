@@ -6,6 +6,7 @@ import { Resources } from '../resources';
 import { Jwt } from '../libraries/jwt';
 
 import { Params } from './interfaces';
+import { ImageTools } from '../libraries/image-tools';
 
 export class BaseService {
   protected readonly log: PinoLogger;
@@ -14,7 +15,9 @@ export class BaseService {
 
   protected readonly resources: Resources;
 
-  protected jwt: Jwt;
+  protected readonly jwt: Jwt;
+
+  protected readonly imageTools: ImageTools;
 
   constructor(params: Params) {
     this.log = params.logger.getLogger(
@@ -23,5 +26,6 @@ export class BaseService {
     this.resources = params.resources;
     this.repositories = params.repositories;
     this.jwt = params.jwt;
+    this.imageTools = params.imageTools;
   }
 }

@@ -1,5 +1,6 @@
 import { S3 } from 'aws-sdk';
 
+import { Readable } from 'stream';
 import { ResourceS3Config } from '../../../configs/interfaces';
 import { Logger } from '../../libraries/logger';
 
@@ -36,19 +37,26 @@ export class S3Resource
     return ResourceType.s3;
   }
 
-  public async upload(): Promise<void> {
+  public async upload(path: string, stream: Readable): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.client.putObject(
+        {
+          Bucket: this.bucket,
+          Key: path,
+          Body: stream,
+        },
+        (err, data) => {
+          if (err) {
+            reject(err);
+          }
 
+          resolve(data.ETag || '');
+        },
+      );
+    });
   }
 
-  public async start(): Promise<void> {
-    // this.client.putObject(
-    //   { Bucket: this.bucket, Key: 'testobject', Body: 'Hello from MinIO!!' },
-    //   (err, data) => {
-    //     if (err) console.log(err);
-    //     else console.log('Successfully uploaded data to testbucket/testobject', data);
-    //   },
-    // );
-  }
+  public async start(): Promise<void> {}
 
   public async stop(): Promise<void> {}
 }

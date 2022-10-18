@@ -7,7 +7,7 @@ export interface User {
   deleted_at?: Date;
 }
 
-export interface CreateParams {
+export interface UserCreateParams {
   email: string;
   username: string;
 }

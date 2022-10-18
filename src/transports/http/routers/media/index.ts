@@ -54,7 +54,7 @@ export class MediaRouter implements HttpRouter {
     next: NextFunction,
   ): Promise<unknown> {
     try {
-      if (!req.files || req.files.file) {
+      if (!req.files || !req.files.file) {
         return next(new ClientError(
           'File filed is required',
           HttpStatusCodes.badRequest,
@@ -101,7 +101,7 @@ export class MediaRouter implements HttpRouter {
 
   private get fileTypeWhiteList(): Array<string> {
     return [
-
+      'image/png',
     ];
   }
 }

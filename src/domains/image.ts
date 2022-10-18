@@ -1,11 +1,11 @@
-export enum ImageTypes {
+export enum ImageSizes {
   original = 'original',
   medium = 'medium',
   small = 'small',
 }
 
 export interface ImageType {
-  url: string;
+  path: string;
   height: number;
   weight: number;
   size: number;
@@ -13,8 +13,9 @@ export interface ImageType {
 
 export interface Image {
   id?: string;
-  sizes: Record<ImageTypes, ImageType>;
+  types: Record<ImageSizes, ImageType>;
   author: bigint;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;

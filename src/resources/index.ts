@@ -16,6 +16,7 @@ import { RedisResource } from './redis';
 
 import { S3Resource } from './storage/s3';
 import { Storage } from './storage/interfaces';
+import { MongoResource } from './mongo';
 
 export class Resources {
   private readonly log: PinoLogger;
@@ -53,6 +54,10 @@ export class Resources {
     return (this.resources[ResourceType.s3] as S3Resource) as Storage;
   }
 
+  public get mongo(): MongoResource {
+    return this.resources[ResourceType.mongo] as MongoResource;
+  }
+
   public async stop(): Promise<void> {
     await Promise.all(
       Object.values(this.resources)
@@ -73,6 +78,7 @@ export class Resources {
       new MailjetResource(this.config.mailjet, this.logger),
       new RedisResource(this.config.redis, this.logger),
       new S3Resource(this.config.s3, this.logger),
+      new MongoResource(this.config.mongo, this.logger),
     ];
   }
 }

@@ -4,13 +4,13 @@ import { PostgresResource } from '../../resources/postgresql';
 import { Users } from '../interfaces';
 import { BaseRepository } from '../base';
 
-import { CreateParams, User } from './interfaces';
+import { UserCreateParams, User } from './interfaces';
 import { User as UserDomain } from '../../domains/user';
 
 export class PostgresUsersRepository
   extends BaseRepository<PostgresResource>
   implements Users {
-  public async create(params: CreateParams): Promise<bigint> {
+  public async create(params: UserCreateParams): Promise<bigint> {
     this.log.debug({ params }, 'create user');
     const result = await this.db
       .getClient()

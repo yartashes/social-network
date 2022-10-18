@@ -1,3 +1,5 @@
+import { Readable } from 'stream';
+
 export interface Storage {
-  upload(): Promise<void>;
+  upload(path: string, stream: Readable): Promise<string>;
 }

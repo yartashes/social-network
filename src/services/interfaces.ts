@@ -17,12 +17,14 @@ import {
   SignupVerifyResult,
 } from './auth/interfaces';
 import { UploadParams } from './media/interfaces';
+import { ImageTools } from '../libraries/image-tools';
 
 export interface Params {
   logger: Logger;
   repositories: Repositories;
   resources: Resources;
   jwt: Jwt;
+  imageTools: ImageTools;
 }
 
 export interface Auth {

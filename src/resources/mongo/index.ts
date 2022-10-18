@@ -1,4 +1,7 @@
 import { Db, MongoClient } from 'mongodb';
+import { Document, ObjectId } from 'bson';
+
+import _ from 'lodash';
 
 import { ResourceMongoConfig } from '../../../configs/interfaces';
 
@@ -34,6 +37,78 @@ export class MongoResource extends BaseResource implements Resource {
     }
 
     return this.db;
+  }
+
+  public serialize<M, D extends Document>(model: M): D {
+    return Object.fromEntries(
+      Object.entries(model)
+        .map(([key, value]) => {
+          const newKey = key === 'id' ? '_id' : _.snakeCase(key);
+          let newValue;
+
+          switch (true) {
+          case Array.isArray(value):
+            newValue = value.map((elm) => {
+              switch (true) {
+              case ObjectId.isValid(elm) && /[0-9a-fA-F]{24}/.test(elm):
+                return new ObjectId(elm);
+              case typeof value === 'object':
+                return this.serialize(elm);
+              default:
+                return elm;
+              }
+            });
+            break;
+          case ObjectId.isValid(value) && /[0-9a-fA-F]{24}/.test(value):
+            newValue = new ObjectId(value);
+            break;
+          case typeof value === 'object':
+            newValue = this.serialize(value);
+            break;
+          default:
+            newValue = value;
+            break;
+          }
+
+          return [newKey, newValue];
+        }),
+    ) as D;
+  }
+
+  public deserialize<D extends Document, M>(doc: D): M {
+    return Object.fromEntries(
+      Object.entries(doc)
+        .map(([key, value]) => {
+          const newKey = _.camelCase(key);
+          let newValue;
+
+          switch (true) {
+          case Array.isArray(value):
+            newValue = value.map((elm) => {
+              switch (true) {
+              case elm.constructor && elm.constructor.name === 'ObjectId':
+                return elm.toString();
+              case typeof value === 'object':
+                return this.serialize(elm);
+              default:
+                return elm;
+              }
+            });
+            break;
+          case value.constructor && value.constructor.name === 'ObjectId':
+            newValue = value.toString();
+            break;
+          case typeof value === 'object':
+            newValue = this.serialize(value);
+            break;
+          default:
+            newValue = value;
+            break;
+          }
+
+          return [newKey, newValue];
+        }),
+    ) as M;
   }
 
   public async start(): Promise<void> {

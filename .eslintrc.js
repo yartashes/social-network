@@ -26,5 +26,6 @@ module.exports = {
     'no-array-constructor': 'off',
     'react/jsx-filename-extension': 'off',
     '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/indent': 'off',
   },
 };
