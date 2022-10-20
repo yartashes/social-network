@@ -3,13 +3,18 @@ import { Logger as PinoLogger } from 'pino';
 import { Response, NextFunction } from 'express';
 
 import { ValidationError } from 'joi';
+
 import { Logger } from '../../../libraries/logger';
+
+import { ClientError } from '../../../libraries/errors/client';
+import { ServerError } from '../../../libraries/errors/server';
 
 import { Request } from '../interfaces';
 
-import { ErrorMiddlewareHandler } from './interface';
 import { ErrorResponse } from '../routers/interfaces';
-import { ClientError } from '../../../libraries/errors/client';
+
+import { ErrorMiddlewareHandler } from './interface';
+import { HttpStatusCodes } from '../../../libraries/constants/http-status-codes';
 
 export class ErrorMiddleware implements ErrorMiddlewareHandler {
   private readonly logger: PinoLogger;
@@ -28,7 +33,7 @@ export class ErrorMiddleware implements ErrorMiddlewareHandler {
     let response: ErrorResponse;
 
     if (err instanceof ValidationError && err.isJoi) {
-      res.statusCode = 400;
+      res.statusCode = HttpStatusCodes.badRequest;
       response = {
         error: err.message,
         details: err.details.map((item) => item.message),
@@ -39,7 +44,15 @@ export class ErrorMiddleware implements ErrorMiddlewareHandler {
         error: 'client side error',
         details: [err.message],
       };
+    } else if (err instanceof ServerError) {
+      res.statusCode = HttpStatusCodes.internalServerError;
+      response = {
+        error: 'client side error',
+        details: [err.message],
+        code: err.getCode(),
+      };
     } else {
+      // todo need change
       res.statusCode = 500;
       response = {
         error: 'internal server error',

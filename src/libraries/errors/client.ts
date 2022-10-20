@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '../http';
+import { HttpStatusCodes } from '../constants/http-status-codes';
 
 export class ClientError extends Error {
   private readonly code: HttpStatusCodes;

@@ -8,4 +8,5 @@ export interface HttpRouter {
 export interface ErrorResponse {
   error: string;
   details: Array<string>;
+  code?: number;
 }

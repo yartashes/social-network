@@ -1,3 +1,3 @@
 export interface CreatePostResponse {
-  result: boolean;
+  result: string;
 }

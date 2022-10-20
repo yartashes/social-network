@@ -5,7 +5,7 @@ import { NextFunction, Response } from 'express';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { Logger } from '../../../libraries/logger';
 import { ClientError } from '../../../libraries/errors/client';
-import { HttpStatusCodes } from '../../../libraries/http';
+import { HttpStatusCodes } from '../../../libraries/constants/http-status-codes';
 import { Jwt } from '../../../libraries/jwt';
 
 import { Users as UsersService } from '../../../services/interfaces';

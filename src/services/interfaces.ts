@@ -18,6 +18,7 @@ import {
 } from './auth/interfaces';
 import { UploadParams } from './media/interfaces';
 import { ImageTools } from '../libraries/image-tools';
+import { PostCreateParams } from './posts/interfaces';
 
 export interface Params {
   logger: Logger;
@@ -43,8 +44,13 @@ export interface Media {
   upload(params: UploadParams): Promise<string>;
 }
 
+export interface Posts {
+  create(params: PostCreateParams): Promise<string>;
+}
+
 export interface ServicesType {
   auth: Auth;
   users: Users;
   media: Media;
+  posts: Posts;
 }

@@ -1,7 +1,7 @@
 import { TokenExpiredError } from 'jsonwebtoken';
 import { ClientError } from '../../libraries/errors/client';
 
-import { HttpStatusCodes } from '../../libraries/http';
+import { HttpStatusCodes } from '../../libraries/constants/http-status-codes';
 
 import { BaseService } from '../base';
 

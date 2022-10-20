@@ -13,6 +13,8 @@ import { Request } from '../../interfaces';
 
 import { HttpRouter } from '../interfaces';
 import { CreatePostResponse } from './interfaces';
+import { createRequest } from './constants';
+import { PostCreateParams } from '../../../../services/posts/interfaces';
 
 export class PostRouter implements HttpRouter {
   private readonly log: PinoLogger;
@@ -52,23 +54,32 @@ export class PostRouter implements HttpRouter {
     next: NextFunction,
   ): Promise<unknown> {
     try {
-      // const params: SignupVerifyParams = {
-      //   code: req.body.code,
-      // };
-      //
-      // const validation = signupVerifyRequest.validate(params);
-      //
-      // if (validation.error) {
-      //   return next(validation.error);
-      // }
-      //
-      // const result = await this
-      //   .services
-      //   .auth
-      //   .signupVerify(params);
+      const params: PostCreateParams = {
+        authorId: req.user.id as bigint,
+        title: req.body.title,
+      };
+
+      if (req.body.text) {
+        params.text = req.body.text;
+      }
+
+      if (req.body.images && req.body.images.length > 0) {
+        params.images = req.body.images;
+      }
+
+      const validation = createRequest.validate(params);
+
+      if (validation.error) {
+        return next(validation.error);
+      }
+
+      const postId = await this
+        .services
+        .posts
+        .create(params);
 
       const response: CreatePostResponse = {
-        result: true,
+        result: postId,
       };
 
       return res.json(response);

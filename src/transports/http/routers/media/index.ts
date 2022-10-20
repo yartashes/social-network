@@ -2,18 +2,21 @@ import { Logger as PinoLogger } from 'pino';
 import { NextFunction, Response as ExpressResponse, Router } from 'express';
 
 import { UploadedFile } from 'express-fileupload';
+
 import { Logger } from '../../../../libraries/logger';
 
+import { ClientError } from '../../../../libraries/errors/client';
+
+import { HttpStatusCodes } from '../../../../libraries/constants/http-status-codes';
+
 import { Services } from '../../../../services';
+import { UploadParams } from '../../../../services/media/interfaces';
 
 import { Request } from '../../interfaces';
 
 import { HttpRouter } from '../interfaces';
 
 import { UploadResponse } from './interfaces';
-import { UploadParams } from '../../../../services/media/interfaces';
-import { ClientError } from '../../../../libraries/errors/client';
-import { HttpStatusCodes } from '../../../../libraries/http';
 import { uploadRequest } from './constants';
 
 export class MediaRouter implements HttpRouter {
