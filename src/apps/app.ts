@@ -8,7 +8,6 @@ import { configSchema } from '../../configs/constants';
 import { Config } from '../../configs/interfaces';
 
 import { Logger } from '../libraries/logger';
-import { Transport } from '../transports/interfaces';
 import { Transports } from '../transports';
 import { Repositories } from '../repositories';
 import { Resources } from '../resources';
@@ -16,6 +15,7 @@ import { Params } from '../services/interfaces';
 import { Services } from '../services';
 import { Jwt } from '../libraries/jwt';
 import { ImageTools } from '../libraries/image-tools';
+import { Requester } from '../requester';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -26,7 +26,7 @@ export class AppServer {
 
   private config?: Config;
 
-  private transports?: Transport;
+  private transports?: Transports;
 
   private resources?: Resources;
 
@@ -62,11 +62,13 @@ export class AppServer {
     const repositories = new Repositories(this.resources, this.logger);
     const jwt = new Jwt(this.getConfig().app.jwt);
     const imageTools = new ImageTools();
+    const requester = new Requester();
 
     const params: Params = {
       repositories,
       jwt,
       imageTools,
+      requester,
       logger: this.logger,
       resources: this.resources,
     };
@@ -79,6 +81,7 @@ export class AppServer {
       this.getConfig().transports,
       this.logger,
     );
+    requester.transports = this.transports.getTransports();
   }
 
   private loadConfig(): void {

@@ -1,7 +1,13 @@
 import { TokenExpiredError } from 'jsonwebtoken';
+
 import { ClientError } from '../../libraries/errors/client';
 
 import { HttpStatusCodes } from '../../libraries/constants/http-status-codes';
+import { ServiceTypes } from '../../libraries/constants/service-types';
+
+import { TokenType } from '../../libraries/jwt/interfaces';
+
+import { User } from '../../domains/user';
 
 import { BaseService } from '../base';
 
@@ -15,7 +21,8 @@ import {
   SignupVerifyParams,
   SignupVerifyResult,
 } from './interfaces';
-import { TokenType } from '../../libraries/jwt/interfaces';
+
+// todo need refactor
 
 export class AuthService extends BaseService implements Auth {
   public async signup(params: SignupParams): Promise<boolean> {
@@ -146,6 +153,14 @@ export class AuthService extends BaseService implements Auth {
       refresh: '',
       access: '',
     };
+  }
+
+  public async getUserById(id: bigint): Promise<User> {
+    return this.requester.call<bigint, User>(
+      ServiceTypes.users,
+      'getById',
+      id,
+    );
   }
 
   private generateCode(): number {

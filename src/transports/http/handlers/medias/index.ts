@@ -1,57 +1,25 @@
-import { Logger as PinoLogger } from 'pino';
-import { NextFunction, Response as ExpressResponse, Router } from 'express';
-
+import { NextFunction, Response as ExpressResponse } from 'express';
 import { UploadedFile } from 'express-fileupload';
 
-import { Logger } from '../../../../libraries/logger';
-
 import { ClientError } from '../../../../libraries/errors/client';
-
 import { HttpStatusCodes } from '../../../../libraries/constants/http-status-codes';
+import { ServiceTypes } from '../../../../libraries/constants/service-types';
 
-import { Services } from '../../../../services';
-import { UploadParams } from '../../../../services/media/interfaces';
+import { UploadParams } from '../../../../services/medias/interfaces';
 
 import { Request } from '../../interfaces';
 
-import { HttpRouter } from '../interfaces';
+import { HttpBaseHandler } from '../base';
 
-import { UploadResponse } from './interfaces';
 import { uploadRequest } from './constants';
+import { UploadResponse } from './interfaces';
 
-export class MediaRouter implements HttpRouter {
-  private readonly log: PinoLogger;
-
-  private readonly services: Services;
-
-  constructor(services: Services, logger: Logger) {
-    this.services = services;
-
-    this.log = logger.getLogger('http-media-router');
+export class MediasHandler extends HttpBaseHandler {
+  public get service(): ServiceTypes {
+    return ServiceTypes.medias;
   }
 
-  public get path(): string {
-    return '/api/media';
-  }
-
-  public init(): Router {
-    this.log.info('Media router init');
-    const router = Router();
-
-    router
-      .post(
-        '/upload',
-        async (req, res, next) => {
-          const newReq = req as Request;
-
-          return this.upload(newReq, res, next);
-        },
-      );
-
-    return router;
-  }
-
-  private async upload(
+  public async upload(
     req: Request,
     res: ExpressResponse,
     next: NextFunction,

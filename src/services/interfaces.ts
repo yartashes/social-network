@@ -7,6 +7,10 @@ import { Resources } from '../resources';
 
 import { User } from '../domains/user';
 
+import { ImageTools } from '../libraries/image-tools';
+
+import { Requester } from '../requester';
+
 import {
   ExchangeParams, ExchangeResult,
   SignInParams,
@@ -16,8 +20,9 @@ import {
   SignupVerifyParams,
   SignupVerifyResult,
 } from './auth/interfaces';
-import { UploadParams } from './media/interfaces';
-import { ImageTools } from '../libraries/image-tools';
+
+import { UploadParams } from './medias/interfaces';
+
 import { PostCreateParams } from './posts/interfaces';
 
 export interface Params {
@@ -26,6 +31,7 @@ export interface Params {
   resources: Resources;
   jwt: Jwt;
   imageTools: ImageTools;
+  requester: Requester
 }
 
 export interface Auth {
@@ -34,13 +40,14 @@ export interface Auth {
   signIn(params: SignInParams): Promise<boolean>;
   signInVerify(params: SignInVerifyParams): Promise<SignInVerifyResult>;
   exchange(params: ExchangeParams): Promise<ExchangeResult>;
+  getUserById(id: bigint): Promise<User>;
 }
 
 export interface Users {
   getByIdWithDeleted(id: bigint): Promise<User>;
 }
 
-export interface Media {
+export interface Medias {
   upload(params: UploadParams): Promise<string>;
 }
 
@@ -48,9 +55,9 @@ export interface Posts {
   create(params: PostCreateParams): Promise<string>;
 }
 
-export interface ServicesType {
+export interface Services {
   auth: Auth;
   users: Users;
-  media: Media;
+  medias: Medias;
   posts: Posts;
 }

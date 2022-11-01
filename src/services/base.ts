@@ -3,10 +3,12 @@ import _ from 'lodash';
 
 import { Repositories } from '../repositories';
 import { Resources } from '../resources';
+import { Requester } from '../requester';
+
 import { Jwt } from '../libraries/jwt';
+import { ImageTools } from '../libraries/image-tools';
 
 import { Params } from './interfaces';
-import { ImageTools } from '../libraries/image-tools';
 
 export class BaseService {
   protected readonly log: PinoLogger;
@@ -19,6 +21,8 @@ export class BaseService {
 
   protected readonly imageTools: ImageTools;
 
+  protected readonly requester: Requester;
+
   constructor(params: Params) {
     this.log = params.logger.getLogger(
       _.kebabCase(this.constructor.name),
@@ -27,5 +31,6 @@ export class BaseService {
     this.repositories = params.repositories;
     this.jwt = params.jwt;
     this.imageTools = params.imageTools;
+    this.requester = params.requester;
   }
 }

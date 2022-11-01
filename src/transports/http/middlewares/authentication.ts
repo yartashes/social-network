@@ -8,7 +8,7 @@ import { ClientError } from '../../../libraries/errors/client';
 import { HttpStatusCodes } from '../../../libraries/constants/http-status-codes';
 import { Jwt } from '../../../libraries/jwt';
 
-import { Users as UsersService } from '../../../services/interfaces';
+import { Auth } from '../../../services/interfaces';
 
 import { Request } from '../interfaces';
 
@@ -20,16 +20,16 @@ export class AuthenticationMiddleware implements MiddlewareHandler {
 
   private readonly jwt: Jwt;
 
-  private readonly usersService: UsersService;
+  private readonly authService: Auth;
 
   constructor(
-    users: UsersService,
+    auth: Auth,
     jwt: Jwt,
     logger: Logger,
   ) {
     this.logger = logger.getLogger('authentication-middleware');
     this.jwt = jwt;
-    this.usersService = users;
+    this.authService = auth;
   }
 
   public get endpointWhiteList(): Array<string> {
@@ -72,7 +72,7 @@ export class AuthenticationMiddleware implements MiddlewareHandler {
         );
       }
 
-      req.user = await this.usersService.getByIdWithDeleted(payload.id);
+      req.user = await this.authService.getUserById(payload.id);
     } catch (e) {
       switch (true) {
       case e instanceof TokenExpiredError:

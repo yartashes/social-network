@@ -6,12 +6,12 @@ import { ImageSizes, ImageType } from '../../domains/image';
 
 import { BaseService } from '../base';
 
-import { Media } from '../interfaces';
+import { Medias } from '../interfaces';
 
 import { Image, UploadParams } from './interfaces';
 import { imageSizes } from './constants';
 
-export class MediaService extends BaseService implements Media {
+export class MediaService extends BaseService implements Medias {
   public async upload(params: UploadParams): Promise<string> {
     const storageResult = await Promise.all<Image>(
       imageSizes

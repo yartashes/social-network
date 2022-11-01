@@ -8,23 +8,27 @@ import {
 import { json } from 'body-parser';
 import fileUpload from 'express-fileupload';
 
+import { Services } from '../../../services';
+
 import { Logger } from '../../../libraries/logger';
+import { Jwt } from '../../../libraries/jwt';
 
 import { Request } from '../interfaces';
+
 import {
   ErrorMiddlewareHandler,
   MiddlewareHandler,
 } from '../middlewares/interface';
+import { AuthenticationMiddleware } from '../middlewares/authentication';
+import { ErrorMiddleware } from '../middlewares/error';
+
+import { Handlers } from '../handlers';
 
 import { HttpRouter } from './interfaces';
-import { SwaggerRouter } from './swagger';
-import { Services } from '../../../services';
-import { AuthRouter } from './auth';
-import { ErrorMiddleware } from '../middlewares/error';
-import { PostRouter } from './posts';
-import { AuthenticationMiddleware } from '../middlewares/authentication';
-import { Jwt } from '../../../libraries/jwt';
-import { MediaRouter } from './media';
+import { SwaggerRouter } from './swagger-router';
+import { AuthRouter } from './auth-router';
+import { PostRouter } from './posts-router';
+import { MediasRouter } from './medias-router';
 
 export class Routes {
   private readonly log: PinoLogger;
@@ -43,6 +47,7 @@ export class Routes {
 
   constructor(
     services: Services,
+    handlers: Handlers,
     express: Express,
     jwt: Jwt,
     logger: Logger,
@@ -52,9 +57,9 @@ export class Routes {
     this.log = logger.getLogger('http-routes');
 
     this.preMiddlewares = [
-      new AuthenticationMiddleware(services.users, jwt, logger),
+      new AuthenticationMiddleware(services.auth, jwt, logger),
     ];
-    this.endpoints = this.initEndpoints(services);
+    this.endpoints = this.initEndpoints(handlers);
     this.postMiddlewares = [];
     this.errorMiddlewares = [
       new ErrorMiddleware(logger),
@@ -118,12 +123,12 @@ export class Routes {
       });
   }
 
-  private initEndpoints(services: Services): Array<HttpRouter> {
+  private initEndpoints(handlers: Handlers): Array<HttpRouter> {
     return [
-      new SwaggerRouter(this.logger),
-      new AuthRouter(services, this.logger),
-      new PostRouter(services, this.logger),
-      new MediaRouter(services, this.logger),
+      new SwaggerRouter(handlers, this.logger),
+      new AuthRouter(handlers, this.logger),
+      new PostRouter(handlers, this.logger),
+      new MediasRouter(handlers, this.logger),
     ];
   }
 }

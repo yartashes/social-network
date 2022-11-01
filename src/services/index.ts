@@ -1,24 +1,24 @@
 import {
+  Services as ServicesInterface,
   Auth,
-  Media,
+  Medias,
   Params,
-  ServicesType,
   Users,
   Posts,
 } from './interfaces';
 import { AuthService } from './auth';
 import { UsersService } from './users';
-import { MediaService } from './media';
+import { MediaService } from './medias';
 import { PostsService } from './posts';
 
 export class Services {
-  private readonly services: ServicesType;
+  private readonly services: ServicesInterface;
 
   constructor(params: Params) {
     this.services = {
       auth: new AuthService(params),
       users: new UsersService(params),
-      media: new MediaService(params),
+      medias: new MediaService(params),
       posts: new PostsService(params),
     };
   }
@@ -31,8 +31,8 @@ export class Services {
     return this.services.users;
   }
 
-  public get media(): Media {
-    return this.services.media;
+  public get media(): Medias {
+    return this.services.medias;
   }
 
   public get posts(): Posts {

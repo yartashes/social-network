@@ -4,8 +4,9 @@ import { Logger } from '../libraries/logger';
 import { Services } from '../services';
 
 import { Transport } from './interfaces';
-import { HttpServer } from './http';
+import { HttpTransport } from './http';
 import { Jwt } from '../libraries/jwt';
+import { LocalTransport } from './local';
 
 export class Transports {
   private readonly transports: Array<Transport>;
@@ -17,8 +18,13 @@ export class Transports {
     logger: Logger,
   ) {
     this.transports = [
-      new HttpServer(services, jwt, config.http, logger),
+      new HttpTransport(services, jwt, config.http, logger),
+      new LocalTransport(services, logger),
     ];
+  }
+
+  public getTransports(): Array<Transport> {
+    return this.transports;
   }
 
   public async stop(): Promise<void> {

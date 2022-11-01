@@ -6,12 +6,18 @@ import express, { Express } from 'express';
 import { TransportsHttpConfig } from '../../../configs/interfaces';
 
 import { Logger } from '../../libraries/logger';
-import { Transport } from '../interfaces';
-import { Routes } from './routers';
-import { Services } from '../../services';
 import { Jwt } from '../../libraries/jwt';
+import { TransportTypes } from '../../libraries/constants/transport-types';
 
-export class HttpServer implements Transport {
+import { Services } from '../../services';
+
+import { HandlerInfo, Transport } from '../interfaces';
+
+import { Routes } from './routers';
+import { Handlers } from './handlers';
+import { AxiosSender } from './sender';
+
+export class HttpTransport implements Transport {
   private readonly log: PinoLogger;
 
   private readonly logger: Logger;
@@ -23,6 +29,8 @@ export class HttpServer implements Transport {
   private readonly services: Services;
 
   private readonly jwt: Jwt;
+
+  private readonly handlers: Handlers;
 
   private server?: Server;
 
@@ -37,13 +45,31 @@ export class HttpServer implements Transport {
     this.services = services;
     this.jwt = jwt;
 
-    this.log = logger.getLogger('http-server');
+    this.log = logger.getLogger('http-transport');
     this.express = express();
+
+    this.handlers = new Handlers(
+      services,
+      new AxiosSender(),
+    );
+  }
+
+  public get handlerInfo(): HandlerInfo {
+    return {
+      type: TransportTypes.http,
+      handlers: this.handlers,
+    };
   }
 
   public async start(): Promise<void> {
     this.log.info('starting http server');
-    new Routes(this.services, this.express, this.jwt, this.logger)
+    new Routes(
+      this.services,
+      this.handlers,
+      this.express,
+      this.jwt,
+      this.logger,
+    )
       .init();
 
     this.server = this.express.listen(
