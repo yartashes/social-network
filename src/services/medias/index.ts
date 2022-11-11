@@ -2,7 +2,11 @@ import fs from 'fs';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { ImageSizes, ImageType } from '../../domains/image';
+import {
+  ImageSizes,
+  ImageType,
+  Image as ImageDomain,
+} from '../../domains/image';
 
 import { BaseService } from '../base';
 
@@ -12,6 +16,7 @@ import { Image, UploadParams } from './interfaces';
 import { imageSizes } from './constants';
 
 export class MediaService extends BaseService implements Medias {
+  // todo need refactor and add generic upload logic
   public async upload(params: UploadParams): Promise<string> {
     const storageResult = await Promise.all<Image>(
       imageSizes
@@ -81,5 +86,15 @@ export class MediaService extends BaseService implements Medias {
         name: params.name,
         types: types as Record<ImageSizes, ImageType>,
       });
+  }
+
+  public async getImageByIds(ids: Array<string>): Promise<Array<ImageDomain>> {
+    if (ids.length === 0) {
+      return [];
+    }
+
+    return this.repositories
+      .images
+      .getByIds(ids);
   }
 }

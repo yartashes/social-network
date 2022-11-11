@@ -131,6 +131,6 @@ export class MongoResource extends BaseResource implements Resource {
   }
 
   private static makeUrl(config: ResourceMongoConfig): string {
-    return `mongodb://${config.auth.user}:${config.auth.password}@${config.hosts.join(',')}/?replicaSet=${config.rs.name}&authSource=${config.db}`;
+    return `mongodb://${config.auth.user}:${config.auth.password}@${config.hosts}/?replicaSet=${config.rs.name}&authSource=${config.db}`;
   }
 }

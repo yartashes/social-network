@@ -73,6 +73,7 @@ export class MediasHandler extends HttpBaseHandler {
   private get fileTypeWhiteList(): Array<string> {
     return [
       'image/png',
+      'image/jpeg',
     ];
   }
 }

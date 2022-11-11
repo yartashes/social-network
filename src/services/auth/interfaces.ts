@@ -33,3 +33,13 @@ export interface ExchangeResult {
   access: string;
   refresh: string;
 }
+
+export interface GetUserByEmailOrUsernameRequest {
+  email: string;
+  username: string;
+}
+
+export interface UserCreateRequest {
+  email: string;
+  username: string;
+}

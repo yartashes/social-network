@@ -34,9 +34,7 @@ export class MongoPostsRepository
     }
 
     if (params.images) {
-      doc.images = this.db.serialize<Array<string>, Array<ObjectId>>(
-        params.images,
-      );
+      doc.images = params.images.map((id) => new ObjectId(id));
     }
 
     const result = await this.collection

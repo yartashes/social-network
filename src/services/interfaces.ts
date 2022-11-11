@@ -6,6 +6,7 @@ import { Repositories } from '../repositories';
 import { Resources } from '../resources';
 
 import { User } from '../domains/user';
+import { Image } from '../domains/image';
 
 import { ImageTools } from '../libraries/image-tools';
 
@@ -24,6 +25,7 @@ import {
 import { UploadParams } from './medias/interfaces';
 
 import { PostCreateParams } from './posts/interfaces';
+import { UserCreateParams } from './users/interfaces';
 
 export interface Params {
   logger: Logger;
@@ -40,15 +42,23 @@ export interface Auth {
   signIn(params: SignInParams): Promise<boolean>;
   signInVerify(params: SignInVerifyParams): Promise<SignInVerifyResult>;
   exchange(params: ExchangeParams): Promise<ExchangeResult>;
-  getUserById(id: bigint): Promise<User>;
+  getUserByIdWithDeleted(id: bigint): Promise<User>;
 }
 
 export interface Users {
-  getByIdWithDeleted(id: bigint): Promise<User>;
+  getByEmailOrUsername(
+    email: string,
+    nickname: string
+  ): Promise<User | undefined>;
+  create(params: UserCreateParams): Promise<bigint>;
+  getByEmail(email: string): Promise<User | undefined>;
+  getById(id: bigint): Promise<User | undefined>;
+  getByIdWithDeleted(id: bigint): Promise<User | undefined>;
 }
 
 export interface Medias {
   upload(params: UploadParams): Promise<string>;
+  getImageByIds(ids: Array<string>): Promise<Array<Image>>;
 }
 
 export interface Posts {

@@ -1,10 +1,22 @@
-export interface TransportsHttpConfig {
+export interface TransportHttpConfig {
   port: number;
   host: string;
 }
 
+export interface TransportKafkaMigrationConfig {
+  version: string;
+}
+
+export interface TransportKafkaConfig {
+  brokers: string;
+  id: string;
+  replication: number;
+  migration: TransportKafkaMigrationConfig;
+}
+
 export interface TransportsConfig {
-  http: TransportsHttpConfig;
+  http: TransportHttpConfig;
+  kafka: TransportKafkaConfig;
 }
 
 export interface LoggerConfig {
@@ -25,7 +37,7 @@ export interface MongoAuthConfig {
 }
 
 export interface ResourceMongoConfig {
-  hosts: Array<string>;
+  hosts: string;
   db: string;
   rs: MongoReplicaSetConfig;
   auth: MongoAuthConfig;

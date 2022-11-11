@@ -3,3 +3,4 @@ dest
 tmp
 /scripts/
 /.gitignore
+/src/transports/kafka/index.ts

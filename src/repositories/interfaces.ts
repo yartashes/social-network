@@ -1,4 +1,5 @@
 import { User } from '../domains/user';
+import { Image } from '../domains/image';
 
 import { UserCreateParams } from './users/interfaces';
 import { AuthInfo } from './auth/interfaces';
@@ -10,6 +11,17 @@ export interface Users {
   getByEmail(email: string): Promise<User | undefined>;
   getByIdWithDeleted(id: bigint): Promise<User | undefined>;
   getById(id: bigint): Promise<User | undefined>;
+  getByEmailWithDeleted(
+    email: string,
+  ): Promise<User | undefined>;
+  getByNicknameWithDeleted(
+    nickname: string,
+  ): Promise<User | undefined>;
+  getByEmailOrUsername(
+    email: string,
+    nickname: string,
+  ): Promise<User | undefined>;
+  replaceOldEmail(email: string): Promise<boolean>;
 }
 
 export interface Auth {
@@ -22,6 +34,7 @@ export interface Auth {
 
 export interface Images {
   create(params: ImageCreateParams): Promise<string>;
+  getByIds(ids: Array<string>): Promise<Array<Image>>;
 }
 
 export interface Posts {

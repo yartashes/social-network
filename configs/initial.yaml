@@ -11,6 +11,13 @@ transports:
   http:
     port: 3456
 
+  kafka:
+    id: social-network
+    replication: 1
+    brokers: 127.0.0.1:19092
+    migration:
+      version: 1668102929637-n488avov-create-posts-topic
+
 logger:
   levels:
     any: debug
@@ -42,9 +49,7 @@ resources:
     db: 0
 
   mongo:
-    hosts:
-      - 127.0.0.1:17017
-      - 127.0.0.1:17018
+    hosts: 127.0.0.1:17017,127.0.0.1:17018
     rs:
       name: sn
     db: posts

@@ -72,7 +72,18 @@ export class AuthenticationMiddleware implements MiddlewareHandler {
         );
       }
 
-      req.user = await this.authService.getUserById(payload.id);
+      const user = await this.authService.getUserByIdWithDeleted(payload.id);
+
+      if (user.deletedAt) {
+        return next(
+          new ClientError(
+            'User are deleted',
+            HttpStatusCodes.forbidden,
+          ),
+        );
+      }
+
+      req.user = user;
     } catch (e) {
       switch (true) {
       case e instanceof TokenExpiredError:

@@ -38,11 +38,11 @@ export class PostgresUsersRepository
     const result = await this.db
       .getClient()
       .query<User>(
-      `
+        `
           SELECT *
           FROM t_users
           WHERE email = $1 AND deleted_at IS NULL;
-      `,
+        `,
         [
           email,
         ],
@@ -55,16 +55,115 @@ export class PostgresUsersRepository
     return PostgresUsersRepository.mapper(result.rows[0]);
   }
 
+  public async getByEmailWithDeleted(
+    email: string,
+  ): Promise<UserDomain | undefined> {
+    this.log.debug({ email }, 'get user by email');
+    const result = await this.db
+      .getClient()
+      .query<User>(
+        `
+          SELECT *
+          FROM t_users
+          WHERE email = $1;
+        `,
+        [
+          email,
+        ],
+      );
+
+    if (result.rows.length === 0) {
+      return undefined;
+    }
+
+    return PostgresUsersRepository.mapper(result.rows[0]);
+  }
+
+  public async getByNicknameWithDeleted(
+    nickname: string,
+  ): Promise<UserDomain | undefined> {
+    this.log.debug({ nickname }, 'get user by nickname');
+    const result = await this.db
+      .getClient()
+      .query<User>(
+        `
+          SELECT *
+          FROM t_users
+          WHERE username = $1;
+        `,
+        [
+          nickname,
+        ],
+      );
+
+    if (result.rows.length === 0) {
+      return undefined;
+    }
+
+    return PostgresUsersRepository.mapper(result.rows[0]);
+  }
+
+  public async getByEmailOrUsername(
+    email: string,
+    nickname: string,
+  ): Promise<UserDomain | undefined> {
+    this.log.debug({ nickname, email }, 'get user by nickname or email');
+    const result = await this.db
+      .getClient()
+      .query<User>(
+        `
+          SELECT *
+          FROM t_users
+          WHERE
+            username = $1 OR email = $2;
+        `,
+        [
+          nickname,
+          email,
+        ],
+      );
+
+    if (result.rows.length === 0) {
+      return undefined;
+    }
+
+    return PostgresUsersRepository.mapper(result.rows[0]);
+  }
+
+  public async replaceOldEmail(
+    email: string,
+  ): Promise<boolean> {
+    this.log.debug({ email }, 'get user by email');
+    const result = await this.db
+      .getClient()
+      .query(
+        `
+          UPDATE t_users
+          SET
+            email = $1
+          WHERE email = $2;
+        `,
+        [
+          `${email}-${+new Date()}`,
+          email,
+        ],
+      );
+
+    this.log.debug({ result });
+
+    return true;
+  }
+
   public async getByIdWithDeleted(id: bigint): Promise<UserDomain | undefined> {
     this.log.debug({ id }, 'get user by id');
     const result = await this.db
       .getClient()
       .query<User>(
-      `
+        `
           SELECT *
           FROM t_users
           WHERE id = $1;
-      `,
+        `,
         [
           id,
         ],
@@ -82,11 +181,11 @@ export class PostgresUsersRepository
     const result = await this.db
       .getClient()
       .query<User>(
-      `
+        `
           SELECT *
           FROM t_users
           WHERE id = $1 AND deleted_at IS NULL;
-      `,
+        `,
         [
           id,
         ],

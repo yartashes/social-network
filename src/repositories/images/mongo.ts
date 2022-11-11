@@ -42,6 +42,23 @@ export class MongoImagesRepository
     return result.insertedId.toString();
   }
 
+  public async getByIds(ids: Array<string>): Promise<Array<ImageDomain>> {
+    this.log.debug({ ids }, 'get images by ids');
+
+    const result = await this.collection
+      .find({
+        _id: {
+          $in: ids.map((id) => new ObjectId(id)),
+        },
+        deleted_at: {
+          $exists: false,
+        },
+      })
+      .toArray();
+
+    return result.map((image) => this.mapper(image));
+  }
+
   private mapper(raw: Image): ImageDomain {
     return this.db.deserialize<Image, ImageDomain>(raw);
   }

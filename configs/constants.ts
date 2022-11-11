@@ -41,6 +41,30 @@ export const configSchema: Schema<Config> = {
         env: 'TRANSPORTS_HTTP_HOST',
       },
     },
+    kafka: {
+      id: {
+        default: 'social-network',
+        env: 'TRANSPORTS_KAFKA_REPLICATION',
+        format: String,
+      },
+      replication: {
+        default: 1,
+        env: 'TRANSPORTS_KAFKA_REPLICATION',
+        format: 'int',
+      },
+      brokers: {
+        default: '',
+        env: 'TRANSPORTS_KAFKA_BROKERS',
+        format: String,
+      },
+      migration: {
+        version: {
+          default: '',
+          env: 'TRANSPORTS_KAFKA_MIGRATION',
+          format: String,
+        },
+      },
+    },
   },
   logger: {
     levels: {},
@@ -114,10 +138,10 @@ export const configSchema: Schema<Config> = {
     },
     mongo: {
       hosts: {
-        default: [],
+        default: '',
         env: 'MONGO_HOSTS',
         nullable: false,
-        format: Array,
+        format: String,
       },
       db: {
         default: 'posts',

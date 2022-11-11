@@ -74,6 +74,6 @@ export class Requester {
       );
     }
 
-    return method(request) as Res;
+    return method.call(handler, request) as Res;
   }
 }

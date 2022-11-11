@@ -16,17 +16,34 @@ import { Auth } from '../interfaces';
 import {
   ExchangeParams,
   ExchangeResult,
+  GetUserByEmailOrUsernameRequest,
   SignInParams,
   SignupParams,
   SignupVerifyParams,
   SignupVerifyResult,
+  UserCreateRequest,
 } from './interfaces';
-
-// todo need refactor
 
 export class AuthService extends BaseService implements Auth {
   public async signup(params: SignupParams): Promise<boolean> {
     const code = this.generateCode();
+
+    const userExists = await this.requester
+      .call<GetUserByEmailOrUsernameRequest, User | undefined>(
+        ServiceTypes.users,
+        'getByEmailOrUsername',
+        {
+          email: params.email,
+          username: params.username,
+        },
+      );
+
+    if (userExists) {
+      throw new ClientError(
+        'Username or email exist in system',
+        HttpStatusCodes.badRequest,
+      );
+    }
 
     const codeSetResult = await this.repositories.auth.setCode(
       code,
@@ -48,10 +65,15 @@ export class AuthService extends BaseService implements Auth {
       throw new ClientError('Invalid verification code', HttpStatusCodes.badRequest);
     }
 
-    const userId = await this.repositories.users.create({
-      email: info.email,
-      username: info.name as string,
-    });
+    const userId = await this.requester
+      .call<UserCreateRequest, bigint>(
+        ServiceTypes.users,
+        'create',
+        {
+          email: info.email,
+          username: info.name as string,
+        },
+      );
 
     const tokens = await this.jwt.encode(userId);
 
@@ -64,7 +86,12 @@ export class AuthService extends BaseService implements Auth {
   }
 
   public async signIn(params: SignInParams): Promise<boolean> {
-    const user = await this.repositories.users.getByEmail(params.email);
+    const user = await this.requester
+      .call<string, User | undefined>(
+        ServiceTypes.users,
+        'getByEmail',
+        params.email,
+      );
 
     if (!user) {
       throw new ClientError('Invalid user email', HttpStatusCodes.badRequest);
@@ -91,7 +118,12 @@ export class AuthService extends BaseService implements Auth {
       throw new ClientError('Invalid verification code', HttpStatusCodes.badRequest);
     }
 
-    const user = await this.repositories.users.getByEmail(info.email);
+    const user = await this.requester
+      .call<string, User | undefined>(
+        ServiceTypes.users,
+        'getByEmail',
+        info.email,
+      );
 
     if (!user) {
       throw new ClientError('Invalid user information', HttpStatusCodes.badRequest);
@@ -126,7 +158,12 @@ export class AuthService extends BaseService implements Auth {
         throw new ClientError('Invalid jwt token', HttpStatusCodes.forbidden);
       }
 
-      const user = await this.repositories.users.getById(payload.id);
+      const user = await this.requester
+        .call<bigint, User | undefined>(
+          ServiceTypes.users,
+          'getById',
+          payload.id,
+        );
 
       if (!user) {
         throw new ClientError('Invalid user information', HttpStatusCodes.badRequest);
@@ -155,10 +192,10 @@ export class AuthService extends BaseService implements Auth {
     };
   }
 
-  public async getUserById(id: bigint): Promise<User> {
+  public async getUserByIdWithDeleted(id: bigint): Promise<User> {
     return this.requester.call<bigint, User>(
       ServiceTypes.users,
-      'getById',
+      'getByIdWithDeleted',
       id,
     );
   }

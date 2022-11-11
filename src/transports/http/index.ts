@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { Logger as PinoLogger } from 'pino';
 import express, { Express } from 'express';
 
-import { TransportsHttpConfig } from '../../../configs/interfaces';
+import { TransportHttpConfig } from '../../../configs/interfaces';
 
 import { Logger } from '../../libraries/logger';
 import { Jwt } from '../../libraries/jwt';
@@ -22,7 +22,7 @@ export class HttpTransport implements Transport {
 
   private readonly logger: Logger;
 
-  private readonly config: TransportsHttpConfig;
+  private readonly config: TransportHttpConfig;
 
   private readonly express: Express;
 
@@ -37,7 +37,7 @@ export class HttpTransport implements Transport {
   constructor(
     services: Services,
     jwt: Jwt,
-    config: TransportsHttpConfig,
+    config: TransportHttpConfig,
     logger: Logger,
   ) {
     this.config = config;

@@ -1,12 +1,14 @@
 import { TransportsConfig } from '../../configs/interfaces';
 
 import { Logger } from '../libraries/logger';
+import { Jwt } from '../libraries/jwt';
+
 import { Services } from '../services';
 
 import { Transport } from './interfaces';
 import { HttpTransport } from './http';
-import { Jwt } from '../libraries/jwt';
 import { LocalTransport } from './local';
+import { KafkaTransport } from './kafka';
 
 export class Transports {
   private readonly transports: Array<Transport>;
@@ -20,6 +22,7 @@ export class Transports {
     this.transports = [
       new HttpTransport(services, jwt, config.http, logger),
       new LocalTransport(services, logger),
+      new KafkaTransport(services, config.kafka, logger),
     ];
   }
 
