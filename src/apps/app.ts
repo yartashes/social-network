@@ -16,6 +16,7 @@ import { Services } from '../services';
 import { Jwt } from '../libraries/jwt';
 import { ImageTools } from '../libraries/image-tools';
 import { Requester } from '../requester';
+import { Migration } from '../migration';
 
 export class AppServer {
   private readonly rootPath : string;
@@ -29,6 +30,8 @@ export class AppServer {
   private transports?: Transports;
 
   private resources?: Resources;
+
+  private migration?: Migration;
 
   constructor(rootPath: string) {
     this.rootPath = path.resolve(rootPath);
@@ -52,15 +55,18 @@ export class AppServer {
   }
 
   public async start(): Promise<void> {
+    await this.migration?.start();
     await this.resources?.start();
     await this.transports?.start();
   }
 
   public async init(): Promise<void> {
-    this.resources = new Resources(this.getConfig().resources, this.logger);
+    const config = this.getConfig();
+    this.migration = new Migration(config, this.logger);
+    this.resources = new Resources(config.resources, this.logger);
 
     const repositories = new Repositories(this.resources, this.logger);
-    const jwt = new Jwt(this.getConfig().app.jwt);
+    const jwt = new Jwt(config.app.jwt);
     const imageTools = new ImageTools();
     const requester = new Requester();
 
@@ -78,7 +84,7 @@ export class AppServer {
     this.transports = new Transports(
       services,
       jwt,
-      this.getConfig().transports,
+      config.transports,
       this.logger,
     );
     requester.transports = this.transports.getTransports();

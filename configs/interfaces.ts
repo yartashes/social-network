@@ -3,15 +3,10 @@ export interface TransportHttpConfig {
   host: string;
 }
 
-export interface TransportKafkaMigrationConfig {
-  version: string;
-}
-
 export interface TransportKafkaConfig {
   brokers: string;
   id: string;
   replication: number;
-  migration: TransportKafkaMigrationConfig;
 }
 
 export interface TransportsConfig {
@@ -92,9 +87,15 @@ export interface AppConfig {
   jwt: AppJwtConfig;
 }
 
+export interface MigrationConfig {
+  kafka: string;
+  postgres: string;
+}
+
 export interface Config {
   app: AppConfig;
   transports: TransportsConfig;
   logger: LoggerConfig;
   resources: ResourcesConfig;
+  migration: MigrationConfig;
 }

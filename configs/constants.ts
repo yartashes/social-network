@@ -57,13 +57,6 @@ export const configSchema: Schema<Config> = {
         env: 'TRANSPORTS_KAFKA_BROKERS',
         format: String,
       },
-      migration: {
-        version: {
-          default: '',
-          env: 'TRANSPORTS_KAFKA_MIGRATION',
-          format: String,
-        },
-      },
     },
   },
   logger: {
@@ -197,6 +190,18 @@ export const configSchema: Schema<Config> = {
         nullable: false,
         format: String,
       },
+    },
+  },
+  migration: {
+    kafka: {
+      default: '',
+      env: 'MIGRATION_KAFKA',
+      format: String,
+    },
+    postgres: {
+      default: '',
+      env: 'MIGRATION_POSTGRES',
+      format: String,
     },
   },
 };

@@ -5,9 +5,7 @@
   "main": "cmd/app.js",
   "scripts": {
     "lint": "eslint . --ext .ts --fix",
-    "build": "rm -rf dest && tsc",
-    "migrate-pg": "node-pg-migrate create -m src/resources/postgresql/migrations -j ts",
-    "migrate-kafka": "ts-node src/transports/kafka/migration/generate.ts generate "
+    "build": "rm -rf dest && tsc"
   },
   "repository": {
     "type": "git",

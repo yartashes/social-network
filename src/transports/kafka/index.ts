@@ -18,7 +18,6 @@ import { HandlerInfo, Transport } from '../interfaces';
 
 import { Handlers } from './handlers';
 import { LoggerFunction } from './interfaces';
-import { Migration } from './migration';
 
 export class KafkaTransport implements Transport {
   private readonly handlers: Handlers;
@@ -60,11 +59,6 @@ export class KafkaTransport implements Transport {
 
   public async start(): Promise<void> {
     this.log.info('kafka transport starting');
-    const admin = this.client.admin();
-    await admin.connect();
-
-    const migration = new Migration(admin, this.log, this.config.replication);
-    await migration.migrate(this.config.migration.version);
     // this.producer = await this.client.producer({
     //
     // });

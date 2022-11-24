@@ -1,7 +1,12 @@
+/* eslint-disable max-classes-per-file,@typescript-eslint/no-unused-vars */
 import path from 'path';
 
-import { Pool, PoolClient } from 'pg';
+import {
+  Pool,
+  PoolClient,
+} from 'pg';
 import migration from 'node-pg-migrate';
+import MigrationBuilder from 'node-pg-migrate/dist/migration-builder';
 
 import { ResourcePostgresConfig } from '../../../configs/interfaces';
 
@@ -45,20 +50,20 @@ export class PostgresResource extends BaseResource implements Resource {
     this.client = await this.pool.connect();
     this.log.info('connected to postgres');
 
-    this.log.info('start migration');
-    await migration({
-      log: (msg: string) => {
-        this.log.info(msg);
-      },
-      dbClient: this.client,
-      migrationsTable: 't_migrations',
-      dir: path.join(
-        __dirname,
-        'migrations',
-      ),
-      direction: 'up',
-    });
-    this.log.info('finish migration');
+    // this.log.info('start migration');
+    // await migration({
+    //   log: (msg: string) => {
+    //     this.log.info(msg);
+    //   },
+    //   dbClient: this.client,
+    //   migrationsTable: 't_migrations',
+    //   dir: path.join(
+    //     __dirname,
+    //     'migrations',
+    //   ),
+    //   direction: 'up',
+    // });
+    // this.log.info('finish migration');
   }
 
   public async stop(): Promise<void> {

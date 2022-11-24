@@ -1,6 +1,6 @@
-import { BaseMigration } from '../base';
+import { KafkaBaseMigration } from '../base';
 
-export class CreatePostsTopic extends BaseMigration {
+export default class CreatePostsTopic extends KafkaBaseMigration {
   private readonly name = '1668102929637-n488avov-create-posts-topic';
 
   public async down(): Promise<void> {

@@ -2,13 +2,14 @@
 import path from 'path';
 import fs from 'fs';
 
-import { white } from 'chalk';
+import { green, white } from 'chalk';
 import boxen, { BorderStyle, Options } from 'boxen';
 import { command } from 'yargs';
 import { compile } from 'handlebars';
 import _ from 'lodash';
 
-import { symbols, template } from './constants';
+import { symbols, resourceTemplateMap } from './constants';
+import { ResourceTypes } from './interfaces';
 
 class Generate {
   private readonly version = 'v1.0.0';
@@ -28,9 +29,19 @@ class Generate {
     return command(
       'generate [name]',
       'Generate migration file',
-      {},
+      {
+        type: {
+          alias: 't',
+          type: 'string',
+          demandOption: true,
+          description: green('choose data base type'),
+          default: ResourceTypes.postgres,
+          choices: Object.keys(resourceTemplateMap),
+        },
+      },
       async (argv) => {
-        await this.generate(argv.name as string);
+        console.log(argv.name, argv.type);
+        await this.generate(argv.name as string, argv.type as ResourceTypes);
       },
     )
       .help('h')
@@ -39,9 +50,10 @@ class Generate {
       .argv;
   }
 
-  private async generate(name: string): Promise<void> {
+  private async generate(name: string, type: ResourceTypes): Promise<void> {
     const fileName = this.fileName(name);
-    const filePath = this.path();
+    const filePath = this.path(type);
+    const template = resourceTemplateMap[type];
 
     const render = compile(template);
 
@@ -66,14 +78,13 @@ class Generate {
     return `${Date.now()}-${prefix}-${name}`;
   }
 
-  private path(): string {
+  private path(type: ResourceTypes): string {
     return path.resolve(
       path.join(
         'src',
-        'transports',
-        'kafka',
         'migration',
-        'topics',
+        type,
+        'migrations',
       ),
     );
   }

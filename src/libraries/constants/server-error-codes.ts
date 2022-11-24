@@ -6,4 +6,13 @@ export enum ServerErrorCodes {
   transportHandlersIsUndefined = 1004,
   serviceHandlerIsUndefined = 1005,
   serviceMethodNotFound = 1006,
+  notConnectedToKafkaInMigration = 1007,
+  notConnectedToKafkaInGetMigrationLastVersion = 1008,
+  migrationTypeGetterNotImplemented = 1009,
+  notInitializedToKafkaAdmin = 1010,
+  migrationCreateInstanceMethodNotImplemented = 1011,
+  migrationUpMethodNotImplemented = 1012,
+  migrationDownMethodNotImplemented = 1013,
+  migrationGetNameNotImplemented = 1014,
+  notConnectedToPostgresInMigration = 1007,
 }
