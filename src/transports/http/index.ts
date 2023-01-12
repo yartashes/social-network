@@ -62,7 +62,7 @@ export class HttpTransport implements Transport {
   }
 
   public async start(): Promise<void> {
-    this.log.info('starting http server');
+    this.log.info('starting http manager');
     new Routes(
       this.services,
       this.handlers,
@@ -92,7 +92,7 @@ export class HttpTransport implements Transport {
         this.log.error(err);
       }
 
-      this.log.info('Http server is closed');
+      this.log.info('Http manager is closed');
     });
 
     return undefined;

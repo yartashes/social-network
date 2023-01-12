@@ -50,7 +50,7 @@ export class Migration {
     );
 
     this.log.info('migration finish migrate');
-    // todo added http server for metrics
+    // todo added http manager for metrics
   }
 
   private init(): Array<MigrationInterface> {

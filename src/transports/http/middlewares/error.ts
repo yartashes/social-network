@@ -55,7 +55,7 @@ export class ErrorMiddleware implements ErrorMiddlewareHandler {
       // todo need change
       res.statusCode = 500;
       response = {
-        error: 'internal server error',
+        error: 'internal manager error',
         details: [err.message],
       };
     }

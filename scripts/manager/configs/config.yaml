@@ -1,0 +1,9 @@
+logger:
+  pretty: true
+  levels:
+    any: debug
+
+resources:
+  mongo:
+    enabled: true
+    image:

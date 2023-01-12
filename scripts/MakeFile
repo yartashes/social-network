@@ -1,0 +1,12 @@
+init-mongo:
+	echo "start init mongo"; \
+	hostExists=`cat /etc/hosts | grep mongo` ; \
+	if [ "$$hostExists" = "" ]; then \
+		echo "Added mongo host info to hosts file"; \
+		echo "# Mongo DB hosts" >> /etc/hosts; \
+		echo "#**********************************************************\n" >> /etc/hosts; \
+		echo "127.0.0.1	mongo1" >> /etc/hosts; \
+		echo "127.0.0.1	mongo2" >> /etc/hosts; \
+		echo "\n#**********************************************************" >> /etc/hosts; \
+	fi; \
+	echo "finish init mongo"; \
