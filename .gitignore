@@ -107,3 +107,4 @@ dist
 dest
 configs/config.yaml
 tmp
+/scripts/manager/configs/config.yaml

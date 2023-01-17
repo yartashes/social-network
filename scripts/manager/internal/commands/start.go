@@ -25,6 +25,8 @@ func newStartCommand(
 }
 
 func (sc StartCommand) Start(ctx context.Context) error {
+	// create network bridge
+
 	_ = sc.resources.Get(constants.Mongo).Start(ctx)
 
 	return nil

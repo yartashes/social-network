@@ -28,7 +28,7 @@ func NewResources(
 	return &Resources{
 		logger: log,
 		resources: map[constants.ResourceTypes]Resource{
-			constants.Mongo: newMongo(docker, logger, cfg.Resources.Mongo),
+			constants.Mongo: newMongo(docker, logger, cfg.Resources.Mongo, cfg.Paths),
 		},
 	}
 }

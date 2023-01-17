@@ -3,6 +3,10 @@ logger:
   levels:
     any: debug
 
+paths:
+  scripts:
+  tmp:
+
 resources:
   mongo:
     enabled: true

@@ -11,7 +11,6 @@ import (
 var (
 	configFile  string
 	rootCommand = &cobra.Command{
-		Use:   "sn-server",
 		Short: "Manage social network backend environment setup and running",
 	}
 )
